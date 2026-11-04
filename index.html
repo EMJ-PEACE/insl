@@ -1,21 +1,44 @@
-//Program 1
-#include <stdio.h>
-#include <string.h>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C Programming Lab Programs</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 28px; background: #f3f4f6; color: #1f2937; font-family: Arial, sans-serif; }
+  main { max-width: 1100px; margin: auto; }
+  h1 { margin: 0 0 24px; }
+  section { margin: 0 0 28px; padding: 22px; background: #fff; border: 1px solid #d1d5db; border-radius: 10px; }
+  .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  h2 { margin: 0; font-size: 20px; }
+  .copy-btn { border: 0; border-radius: 6px; padding: 8px 14px; background: #2563eb; color: white; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .copy-btn:hover { background: #1d4ed8; }
+  .copy-btn:focus-visible { outline: 3px solid #93c5fd; outline-offset: 2px; }
+  pre { margin: 0; padding: 18px; overflow-x: auto; background: #111827; color: #e5e7eb; border-radius: 8px; font: 14px/1.55 Consolas, "Courier New", monospace; tab-size: 4; white-space: pre; }
+  @media (max-width: 600px) { body { padding: 12px; } section { padding: 14px; } pre { font-size: 12px; padding: 12px; } }
+</style>
+</head>
+<body>
+<main>
+<h1>C Programming Lab Programs</h1>
+<section><div class="section-head"><h2>Program 1</h2><button class="copy-btn" type="button">Copy code</button></div><pre><code>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
 
 void encrypt(char text[], int key) {
     for (int i = 0; text[i] != '\0'; i++) {
-        if (text[i] >= 'a' && text[i] <= 'z')
+        if (text[i] &gt;= 'a' &amp;&amp; text[i] &lt;= 'z')
             text[i] = (text[i] - 'a' + key) % 26 + 'a';
-        else if (text[i] >= 'A' && text[i] <= 'Z')
+        else if (text[i] &gt;= 'A' &amp;&amp; text[i] &lt;= 'Z')
             text[i] = (text[i] - 'A' + key) % 26 + 'A';
     }
 }
 
 void decrypt(char text[], int key) {
     for (int i = 0; text[i] != '\0'; i++) {
-        if (text[i] >= 'a' && text[i] <= 'z')
+        if (text[i] &gt;= 'a' &amp;&amp; text[i] &lt;= 'z')
             text[i] = (text[i] - 'a' - key + 26) % 26 + 'a';
-        else if (text[i] >= 'A' && text[i] <= 'Z')
+        else if (text[i] &gt;= 'A' &amp;&amp; text[i] &lt;= 'Z')
             text[i] = (text[i] - 'A' - key + 26) % 26 + 'A';
     }
 }
@@ -29,7 +52,7 @@ int main() {
     msg[strcspn(msg, "\n")] = 0;
 
     printf("Enter key: ");
-    scanf("%d", &key);
+    scanf("%d", &amp;key);
     key = ((key % 26) + 26) % 26;
 
     encrypt(msg, key);
@@ -37,18 +60,16 @@ int main() {
 
     decrypt(msg, key);
     printf("Decrypted: %s\n", msg);
-}
-
-//Program 2
-#include <stdio.h>
-#include <string.h>
+}</code></pre></section>
+<section><div class="section-head"><h2>Program 2</h2><button class="copy-btn" type="button">Copy code</button></div><pre><code>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
 
 void encrypt(char text[], char key[], char cipher[]) {
     int j = 0;
     int klen = strlen(key);
 
     for (int i = 0; text[i] != '\0'; i++) {
-        if (text[i] >= 'A' && text[i] <= 'Z') {
+        if (text[i] &gt;= 'A' &amp;&amp; text[i] &lt;= 'Z') {
             cipher[i] = (text[i] - 'A' + key[j % klen] - 'A') % 26 + 'A';
             j++;
         } else {
@@ -63,7 +84,7 @@ void decrypt(char cipher[], char key[], char text[]) {
     int klen = strlen(key);
 
     for (int i = 0; cipher[i] != '\0'; i++) {
-        if (cipher[i] >= 'A' && cipher[i] <= 'Z') {
+        if (cipher[i] &gt;= 'A' &amp;&amp; cipher[i] &lt;= 'Z') {
             text[i] = (cipher[i] - 'A' - (key[j % klen] - 'A') + 26) % 26 + 'A';
             j++;
         } else {
@@ -77,11 +98,11 @@ int main() {
     char text[100], key[100], cipher[100], decrypted[100];
 
     printf("Enter plaintext (UPPERCASE): ");
-    fgets(text, 100, stdin); 
+    fgets(text, 100, stdin);
     text[strcspn(text, "\n")] = 0;
 
     printf("Enter key (UPPERCASE): ");
-    fgets(key, 100, stdin); 
+    fgets(key, 100, stdin);
     key[strcspn(key, "\n")] = 0;
 
     encrypt(text, key, cipher);
@@ -89,13 +110,10 @@ int main() {
 
     decrypt(cipher, key, decrypted);
     printf("Decrypted: %s\n", decrypted);
-}
-
-
-//Program 3
-#include <stdio.h>
-#include <ctype.h>
-#include <string.h>
+}</code></pre></section>
+<section><div class="section-head"><h2>Program 3</h2><button class="copy-btn" type="button">Copy code</button></div><pre><code>#include &lt;stdio.h&gt;
+#include &lt;ctype.h&gt;
+#include &lt;string.h&gt;
 
 #define MAX 1000
 #define SIZE 26
@@ -104,7 +122,7 @@ char english[] = "ETAOINSHRDLCUMWFGYPBVKJXQZ";
 
 // Count frequency of each letter
 void calculateFrequency(char text[], int freq[]) {
-    for (int i = 0; i < SIZE; i++)
+    for (int i = 0; i &lt; SIZE; i++)
         freq[i] = 0;
 
     for (int i = 0; text[i] != '\0'; i++)
@@ -115,20 +133,20 @@ void calculateFrequency(char text[], int freq[]) {
 // Display frequency
 void displayFrequency(int freq[]) {
     printf("\n--- Letter Frequency in Ciphertext ---\n");
-    for (int i = 0; i < SIZE; i++)
+    for (int i = 0; i &lt; SIZE; i++)
         printf("%c : %d\n", 'A' + i, freq[i]);
 }
 
 // Sort letters based on frequency
 void sortFrequency(int freq[], char sorted[]) {
     int temp[SIZE];
-    for (int i = 0; i < SIZE; i++)
+    for (int i = 0; i &lt; SIZE; i++)
         temp[i] = freq[i];
 
-    for (int i = 0; i < SIZE; i++) {
+    for (int i = 0; i &lt; SIZE; i++) {
         int max = 0;
-        for (int j = 1; j < SIZE; j++)
-            if (temp[j] > temp[max])
+        for (int j = 1; j &lt; SIZE; j++)
+            if (temp[j] &gt; temp[max])
                 max = j;
 
         sorted[i] = 'A' + max;
@@ -140,12 +158,12 @@ void sortFrequency(int freq[], char sorted[]) {
 // Apply frequency mapping to decrypt
 void decrypt(char cipher[], char text[], char sorted[]) {
     char mapping[SIZE];
-    for (int i = 0; i < SIZE; i++)
+    for (int i = 0; i &lt; SIZE; i++)
         mapping[sorted[i] - 'A'] = english[i];
 
     printf("\n--- Mapping of Ciphertext letters to Guessed Letters ---\n");
-    for (int i = 0; i < SIZE; i++)
-        printf("%c -> %c\n", sorted[i], english[i]);
+    for (int i = 0; i &lt; SIZE; i++)
+        printf("%c -&gt; %c\n", sorted[i], english[i]);
 
     for (int i = 0; cipher[i] != '\0'; i++) {
         if (isalpha(cipher[i])) {
@@ -181,20 +199,17 @@ int main() {
     printf("%s\n", text);
 
     return 0;
-}
-
-
-//Program 4
-#include <stdio.h>
-#include <string.h>
+}</code></pre></section>
+<section><div class="section-head"><h2>Program 4</h2><button class="copy-btn" type="button">Copy code</button></div><pre><code>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
 
 #define MAX 100
 
 void encrypt(char text[], int key) {
     int len = strlen(text);
     printf("Ciphertext: ");
-    for (int col = 0; col < key; col++)
-        for (int i = col; i < len; i += key)
+    for (int col = 0; col &lt; key; col++)
+        for (int i = col; i &lt; len; i += key)
             printf("%c", text[i]);
     printf("\n");
 }
@@ -208,15 +223,15 @@ void decrypt(char cipher[], int key) {
     memset(grid, 0, sizeof(grid));
 
     int index = 0;
-    for (int col = 0; col < key; col++) {
-        int maxRows = (col < fullCols) ? rows : rows - 1;
-        for (int row = 0; row < maxRows; row++)
-            if (index < len) grid[row][col] = cipher[index++];
+    for (int col = 0; col &lt; key; col++) {
+        int maxRows = (col &lt; fullCols) ? rows : rows - 1;
+        for (int row = 0; row &lt; maxRows; row++)
+            if (index &lt; len) grid[row][col] = cipher[index++];
     }
 
     printf("Decrypted: ");
-    for (int i = 0; i < rows; i++)
-        for (int j = 0; j < key; j++)
+    for (int i = 0; i &lt; rows; i++)
+        for (int j = 0; j &lt; key; j++)
             if (grid[i][j]) printf("%c", grid[i][j]);
     printf("\n");
 }
@@ -230,7 +245,7 @@ int main() {
     plaintext[strcspn(plaintext, "\n")] = 0;
 
     printf("Enter key (columns): ");
-    scanf("%d", &key);
+    scanf("%d", &amp;key);
     getchar();
 
     encrypt(plaintext, key);
@@ -240,14 +255,11 @@ int main() {
     ciphertext[strcspn(ciphertext, "\n")] = 0;
 
     decrypt(ciphertext, key);
-}
-
-
-//Program 5
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <stdbool.h>
+}</code></pre></section>
+<section><div class="section-head"><h2>Program 5</h2><button class="copy-btn" type="button">Copy code</button></div><pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+#include &lt;stdbool.h&gt;
 
 #define HASH_SPACE 1000  // Hash values range from 0 to 999
 
@@ -265,7 +277,7 @@ int main() {
         hash_value = rand() % HASH_SPACE;
         attempts++;
 
-        printf("Attempt %d: Generated hash value = %d --> ", attempts, hash_value);
+        printf("Attempt %d: Generated hash value = %d --&gt; ", attempts, hash_value);
 
         if (hash_seen[hash_value]) {
             printf("Collision Detected!\n");
@@ -283,4 +295,26 @@ int main() {
     printf("Birthday Attack Simulation Completed.\n");
 
     return 0;
-}
+}</code></pre></section>
+</main>
+<script>
+  document.querySelectorAll('.copy-btn').forEach(button => {
+    button.addEventListener('click', async () => {
+      const code = button.closest('section').querySelector('code').innerText;
+      try {
+        await navigator.clipboard.writeText(code);
+        button.textContent = 'Copied!';
+      } catch (error) {
+        const range = document.createRange();
+        range.selectNodeContents(button.closest('section').querySelector('code'));
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        button.textContent = 'Select and copy';
+      }
+      setTimeout(() => button.textContent = 'Copy code', 1600);
+    });
+  });
+</script>
+</body>
+</html>
