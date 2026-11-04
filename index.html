@@ -1,0 +1,286 @@
+//Program 1
+#include <stdio.h>
+#include <string.h>
+
+void encrypt(char text[], int key) {
+    for (int i = 0; text[i] != '\0'; i++) {
+        if (text[i] >= 'a' && text[i] <= 'z')
+            text[i] = (text[i] - 'a' + key) % 26 + 'a';
+        else if (text[i] >= 'A' && text[i] <= 'Z')
+            text[i] = (text[i] - 'A' + key) % 26 + 'A';
+    }
+}
+
+void decrypt(char text[], int key) {
+    for (int i = 0; text[i] != '\0'; i++) {
+        if (text[i] >= 'a' && text[i] <= 'z')
+            text[i] = (text[i] - 'a' - key + 26) % 26 + 'a';
+        else if (text[i] >= 'A' && text[i] <= 'Z')
+            text[i] = (text[i] - 'A' - key + 26) % 26 + 'A';
+    }
+}
+
+int main() {
+    char msg[100];
+    int key;
+
+    printf("Enter message: ");
+    fgets(msg, 100, stdin);
+    msg[strcspn(msg, "\n")] = 0;
+
+    printf("Enter key: ");
+    scanf("%d", &key);
+    key = ((key % 26) + 26) % 26;
+
+    encrypt(msg, key);
+    printf("Encrypted: %s\n", msg);
+
+    decrypt(msg, key);
+    printf("Decrypted: %s\n", msg);
+}
+
+//Program 2
+#include <stdio.h>
+#include <string.h>
+
+void encrypt(char text[], char key[], char cipher[]) {
+    int j = 0;
+    int klen = strlen(key);
+
+    for (int i = 0; text[i] != '\0'; i++) {
+        if (text[i] >= 'A' && text[i] <= 'Z') {
+            cipher[i] = (text[i] - 'A' + key[j % klen] - 'A') % 26 + 'A';
+            j++;
+        } else {
+            cipher[i] = text[i];  // keep spaces/punctuation as-is
+        }
+    }
+    cipher[strlen(text)] = '\0';
+}
+
+void decrypt(char cipher[], char key[], char text[]) {
+    int j = 0;
+    int klen = strlen(key);
+
+    for (int i = 0; cipher[i] != '\0'; i++) {
+        if (cipher[i] >= 'A' && cipher[i] <= 'Z') {
+            text[i] = (cipher[i] - 'A' - (key[j % klen] - 'A') + 26) % 26 + 'A';
+            j++;
+        } else {
+            text[i] = cipher[i];
+        }
+    }
+    text[strlen(cipher)] = '\0';
+}
+
+int main() {
+    char text[100], key[100], cipher[100], decrypted[100];
+
+    printf("Enter plaintext (UPPERCASE): ");
+    fgets(text, 100, stdin); 
+    text[strcspn(text, "\n")] = 0;
+
+    printf("Enter key (UPPERCASE): ");
+    fgets(key, 100, stdin); 
+    key[strcspn(key, "\n")] = 0;
+
+    encrypt(text, key, cipher);
+    printf("Encrypted: %s\n", cipher);
+
+    decrypt(cipher, key, decrypted);
+    printf("Decrypted: %s\n", decrypted);
+}
+
+
+//Program 3
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+#define MAX 1000
+#define SIZE 26
+
+char english[] = "ETAOINSHRDLCUMWFGYPBVKJXQZ";
+
+// Count frequency of each letter
+void calculateFrequency(char text[], int freq[]) {
+    for (int i = 0; i < SIZE; i++)
+        freq[i] = 0;
+
+    for (int i = 0; text[i] != '\0'; i++)
+        if (isalpha(text[i]))
+            freq[toupper(text[i]) - 'A']++;
+}
+
+// Display frequency
+void displayFrequency(int freq[]) {
+    printf("\n--- Letter Frequency in Ciphertext ---\n");
+    for (int i = 0; i < SIZE; i++)
+        printf("%c : %d\n", 'A' + i, freq[i]);
+}
+
+// Sort letters based on frequency
+void sortFrequency(int freq[], char sorted[]) {
+    int temp[SIZE];
+    for (int i = 0; i < SIZE; i++)
+        temp[i] = freq[i];
+
+    for (int i = 0; i < SIZE; i++) {
+        int max = 0;
+        for (int j = 1; j < SIZE; j++)
+            if (temp[j] > temp[max])
+                max = j;
+
+        sorted[i] = 'A' + max;
+        temp[max] = -1;
+    }
+    sorted[SIZE] = '\0';
+}
+
+// Apply frequency mapping to decrypt
+void decrypt(char cipher[], char text[], char sorted[]) {
+    char mapping[SIZE];
+    for (int i = 0; i < SIZE; i++)
+        mapping[sorted[i] - 'A'] = english[i];
+
+    printf("\n--- Mapping of Ciphertext letters to Guessed Letters ---\n");
+    for (int i = 0; i < SIZE; i++)
+        printf("%c -> %c\n", sorted[i], english[i]);
+
+    for (int i = 0; cipher[i] != '\0'; i++) {
+        if (isalpha(cipher[i])) {
+            char ch = mapping[toupper(cipher[i]) - 'A'];
+            text[i] = islower(cipher[i]) ? tolower(ch) : ch;
+        } else
+            text[i] = cipher[i];
+    }
+    text[strlen(cipher)] = '\0';
+}
+
+int main() {
+    char cipher[MAX], text[MAX];
+    char sorted[SIZE + 1];
+    int freq[SIZE];
+
+    printf("Enter Ciphertext (max %d chars): ", MAX);
+    fgets(cipher, MAX, stdin);
+    cipher[strcspn(cipher, "\n")] = '\0';
+
+    printf("\n--- Step 1: Calculating Letter Frequencies ---\n");
+    calculateFrequency(cipher, freq);
+    displayFrequency(freq);
+
+    printf("\n--- Step 2: Sorting Letters by Frequency ---\n");
+    sortFrequency(freq, sorted);
+    printf("Letters sorted by frequency (most frequent first):\n%s\n", sorted);
+
+    printf("\n--- Step 3: Applying Frequency Analysis Mapping ---\n");
+    decrypt(cipher, text, sorted);
+
+    printf("\n--- Step 4: Resulting Decrypted Text ---\n");
+    printf("%s\n", text);
+
+    return 0;
+}
+
+
+//Program 4
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 100
+
+void encrypt(char text[], int key) {
+    int len = strlen(text);
+    printf("Ciphertext: ");
+    for (int col = 0; col < key; col++)
+        for (int i = col; i < len; i += key)
+            printf("%c", text[i]);
+    printf("\n");
+}
+
+void decrypt(char cipher[], int key) {
+    int len = strlen(cipher);
+    int rows = (len + key - 1) / key;
+    int fullCols = len % key == 0 ? key : len % key;
+
+    char grid[rows][key];
+    memset(grid, 0, sizeof(grid));
+
+    int index = 0;
+    for (int col = 0; col < key; col++) {
+        int maxRows = (col < fullCols) ? rows : rows - 1;
+        for (int row = 0; row < maxRows; row++)
+            if (index < len) grid[row][col] = cipher[index++];
+    }
+
+    printf("Decrypted: ");
+    for (int i = 0; i < rows; i++)
+        for (int j = 0; j < key; j++)
+            if (grid[i][j]) printf("%c", grid[i][j]);
+    printf("\n");
+}
+
+int main() {
+    char plaintext[MAX], ciphertext[MAX];
+    int key;
+
+    printf("Enter plaintext: ");
+    fgets(plaintext, MAX, stdin);
+    plaintext[strcspn(plaintext, "\n")] = 0;
+
+    printf("Enter key (columns): ");
+    scanf("%d", &key);
+    getchar();
+
+    encrypt(plaintext, key);
+
+    printf("Enter ciphertext to decrypt: ");
+    fgets(ciphertext, MAX, stdin);
+    ciphertext[strcspn(ciphertext, "\n")] = 0;
+
+    decrypt(ciphertext, key);
+}
+
+
+//Program 5
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <stdbool.h>
+
+#define HASH_SPACE 1000  // Hash values range from 0 to 999
+
+int main() {
+    srand(time(NULL));
+
+    bool hash_seen[HASH_SPACE] = { false };
+    int attempts = 0;
+    int hash_value;
+
+    printf("Starting Birthday Attack Simulation...\n");
+    printf("----------------------------------------\n");
+
+    while (1) {
+        hash_value = rand() % HASH_SPACE;
+        attempts++;
+
+        printf("Attempt %d: Generated hash value = %d --> ", attempts, hash_value);
+
+        if (hash_seen[hash_value]) {
+            printf("Collision Detected!\n");
+            printf("\nSummary:\n");
+            printf(" - Total attempts made: %d\n", attempts);
+            printf(" - Collided hash value: %d\n", hash_value);
+            break;
+        } else {
+            printf("No collision, marking as seen.\n");
+            hash_seen[hash_value] = true;
+        }
+    }
+
+    printf("----------------------------------------\n");
+    printf("Birthday Attack Simulation Completed.\n");
+
+    return 0;
+}
